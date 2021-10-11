@@ -1,11 +1,12 @@
 let photoData;
 
-function getPhotos() {
+// XMLHttpRequest
+async function getPhotosByXhr() {
   return new Promise((resolve, reject) => {
     
     let xhr = new XMLHttpRequest();
     let token = 'P-30lrIUvH1bGoB1PncqxDePpYxCbKUYHeWp3952Fv0';
-    let url = `https://api.unsplash.com/photos/?client_id=${token}`
+    let url = `https://api.unsplash.com/photos/?client_id=${token}`;
     
     xhr.open('GET', url, true);
     
@@ -26,9 +27,39 @@ function getPhotos() {
   });
 }
 
+// Fetch()
+async function getPhotosByFetch() {
+  let token = 'P-30lrIUvH1bGoB1PncqxDePpYxCbKUYHeWp3952Fv0';
+  //# Correct url
+  let url = `https://api.unsplash.com/photos/?client_id=${token}`;
+  //# Wrong url
+  // let url = `https://api.unsplash.com/photos/`;
+
+  return fetch(url)
+    .then(
+      (response) => {
+        //# response object is the whold http request/response object
+        // console.log(response);
+        if (response.ok) {
+          return response.json();
+        } else {
+          //# Log to record can be here!
+          // console.error(`Fail connection with status ${response.status}`);
+          return undefined;
+        }
+      }
+    );
+}
+
 async function refreshGalary() {
-  let response = await getPhotos();
-  if (response.length > 0) {
+  // # Use XmlHttpRequest 
+  // let response = await getPhotosByXhr();
+  
+  // # Use fetch
+  let response = await getPhotosByFetch();
+  
+  console.log(response);
+  if (response) {
     let galary = document.getElementById('galary');
     galary.innerHTML = "";
     response.forEach(photo => {
